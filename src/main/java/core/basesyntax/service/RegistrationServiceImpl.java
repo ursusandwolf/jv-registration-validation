@@ -18,6 +18,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         validateLength(user.getPassword(), "Password");
         checkAge(user.getAge());
 
+        storageDao.add(user);
+        System.out.println("User " + login + " is registered with Id: " + user.getId());
 
         return user;
     }
