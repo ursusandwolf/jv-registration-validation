@@ -2,6 +2,7 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
+import core.basesyntax.model.UserRegisterException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -36,7 +37,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_NullUser_Fail() {
-        assertThrows(NullPointerException.class,
+        assertThrows(UserRegisterException.class,
                 () -> registration.register(null));
     }
     @Test

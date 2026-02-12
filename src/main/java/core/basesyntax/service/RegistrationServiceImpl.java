@@ -11,6 +11,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        if (user == null) {
+            throw new UserRegisterException("Invalid value null user");
+        }
         String login = user.getLogin();
         validateLength(login, "Login");
         checkIfUserRegistered(login);
