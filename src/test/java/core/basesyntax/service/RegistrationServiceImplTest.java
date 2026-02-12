@@ -1,5 +1,6 @@
 package core.basesyntax.service;
 
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -10,10 +11,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class RegistrationServiceImplTest {
 
     private static RegistrationService registration;
+    private static StorageDaoImpl dao;
 
     @BeforeAll
     public static void init(){
         registration = new RegistrationServiceImpl();
+        dao = new StorageDaoImpl();
     }
 
     @Test
@@ -24,8 +27,11 @@ class RegistrationServiceImplTest {
         user.setAge(21);
 
         registration.register(user);
-
-//        assertEquals();
+        User saved = dao.get(user.getLogin());
+        assertNotNull(saved);
+        assertEquals(user, saved);
+        assertEquals(user.getPassword(), saved.getPassword());
+        assertEquals(user.getAge(), saved.getAge());
     }
 
     @Test
