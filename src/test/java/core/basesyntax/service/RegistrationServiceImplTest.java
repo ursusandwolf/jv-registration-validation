@@ -41,9 +41,20 @@ class RegistrationServiceImplTest {
                 () -> registration.register(null));
     }
     @Test
-    void register_EmptyUser_Fail() {}
+    void register_EmptyUser_Fail() {
+        assertThrows(UserRegisterException.class,
+                () -> registration.register(new User()));
+    }
     @Test
-    void register_ShortNameUser_Fail() {}
+    void register_ShortNameUser_Fail() {
+        User shortNameUser = new User();
+        shortNameUser.setLogin("Vasya");
+        shortNameUser.setPassword("Vasya$#147");
+        shortNameUser.setAge(21);
+        // registration.register(shortNameUser);
+        assertThrows(UserRegisterException.class,
+                () -> registration.register(shortNameUser));
+    }
     @Test
     void register_ShortPasswordUser_Fail() {}
     @Test
