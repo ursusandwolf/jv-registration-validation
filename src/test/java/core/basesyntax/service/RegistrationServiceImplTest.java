@@ -13,26 +13,34 @@ class RegistrationServiceImplTest {
 
     private static RegistrationService registration;
     private static StorageDaoImpl dao;
+    public static final User USER = new User();
+    static {
+        USER.setLogin("Vasya12345");
+        USER.setPassword("Vasya$#145");
+        USER.setAge(21);
+    }
 
     @BeforeAll
     public static void init(){
         registration = new RegistrationServiceImpl();
         dao = new StorageDaoImpl();
+
     }
 
     @Test
     void register_NewValidUser_Ok() {
-        User user = new User();
-        user.setLogin("Vasya12345");
-        user.setPassword("Vasya$#145");
-        user.setAge(21);
-
-        registration.register(user);
-        User saved = dao.get(user.getLogin());
+        registration.register(USER);
+        User saved = dao.get(USER.getLogin());
         assertNotNull(saved);
-        assertEquals(user, saved);
-        assertEquals(user.getPassword(), saved.getPassword());
-        assertEquals(user.getAge(), saved.getAge());
+        assertEquals(USER, saved);
+        assertEquals(USER.getPassword(), saved.getPassword());
+        assertEquals(USER.getAge(), saved.getAge());
+    }
+
+    @Test
+    void register_ExistedUser_Fail() {
+        assertThrows(UserRegisterException.class,
+                () -> registration.register(USER));
     }
 
     @Test
@@ -55,10 +63,34 @@ class RegistrationServiceImplTest {
         assertThrows(UserRegisterException.class,
                 () -> registration.register(shortNameUser));
     }
+
     @Test
-    void register_ShortPasswordUser_Fail() {}
+    void register_LoginLength6_OK() {
+        User login6 = new User();
+        login6.setLogin("Vasya6");
+        login6.setPassword("Vasya$#147");
+        login6.setAge(21);
+
+        registration.register(login6);
+        User saved = dao.get(login6.getLogin());
+        assertNotNull(saved);
+        assertEquals(login6, saved);
+    }
+
+
     @Test
-    void register_ExistedUser_Fail() {}
+    void register_ShortPasswordUser_Fail() {
+        User login = new User();
+        login.setLogin("Vasya7");
+        login.setPassword("Vasya");
+        login.setAge(21);
+
+        assertThrows(UserRegisterException.class,
+                () -> registration.register(login));
+    }
+
     @Test
-    void register_NotAdultUser_Fail() {}
+    void register_NotAdultUser_Fail() {
+
+    }
 }

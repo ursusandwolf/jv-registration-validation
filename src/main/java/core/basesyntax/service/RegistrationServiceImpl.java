@@ -30,8 +30,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void checkIfUserRegistered(String login) {
         User storageUser = storageDao.get(login);
         if (storageUser != null) {
-            throw new UserRegisterException
-                    ("User with such login already registered");
+            throw new UserRegisterException("User with such login already registered");
         }
     }
 
