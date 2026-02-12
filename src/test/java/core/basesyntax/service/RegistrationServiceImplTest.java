@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 import core.basesyntax.model.UserRegisterException;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
@@ -22,8 +22,8 @@ class RegistrationServiceImplTest {
         USER.setAge(21);
     }
 
-    @BeforeAll
-    public static void init() {
+    @BeforeEach
+    public void init() {
         registration = new RegistrationServiceImpl();
         dao = new StorageDaoImpl();
     }
@@ -40,8 +40,14 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ExistedUser_Fail() {
+        User user = new User();
+        user.setLogin("Vasya2345");
+        user.setPassword("Vasya$#145");
+        user.setAge(21);
+        registration.register(user);
+
         assertThrows(UserRegisterException.class,
-                () -> registration.register(USER));
+                () -> registration.register(user));
     }
 
     @Test
@@ -92,6 +98,19 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_18Age_OK() {
+        User login = new User();
+        login.setLogin("Vasya12");
+        login.setPassword("Vasya79879");
+        login.setAge(18);
+
+        registration.register(login);
+        User saved = dao.get(login.getLogin());
+        assertNotNull(saved);
+        assertEquals(login, saved);
+    }
+
+    @Test
     void register_NotAdultUser_Fail() {
         User login = new User();
         login.setLogin("Vasya8");
@@ -100,4 +119,35 @@ class RegistrationServiceImplTest {
         assertThrows(UserRegisterException.class,
                 () -> registration.register(login));
     }
+
+    @Test
+    void register_NullAge_Fail() {
+        User login = new User();
+        login.setLogin("Vasya9");
+        login.setPassword("Vasya79879");
+        login.setAge(null);
+        assertThrows(UserRegisterException.class,
+                () -> registration.register(login));
+    }
+
+    @Test
+    void register_NegativeAge_Fail() {
+        User login = new User();
+        login.setLogin("Vasya10");
+        login.setPassword("Vasya79879");
+        login.setAge(-1000);
+        assertThrows(UserRegisterException.class,
+                () -> registration.register(login));
+    }
+
+    @Test
+    void register_ElfAge_Fail() {
+        User login = new User();
+        login.setLogin("Vasya11");
+        login.setPassword("Vasya79879");
+        login.setAge(1000);
+        assertThrows(UserRegisterException.class,
+                () -> registration.register(login));
+    }
+
 }

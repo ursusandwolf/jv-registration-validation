@@ -35,8 +35,11 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkAge(Integer age) {
-        if (age < 18) {
+        if (age == null || age < 18) {
             throw new UserRegisterException("Age is less than 18");
+        }
+        if (age > 200) {
+            throw new UserRegisterException("Age is more than 200");
         }
     }
 
