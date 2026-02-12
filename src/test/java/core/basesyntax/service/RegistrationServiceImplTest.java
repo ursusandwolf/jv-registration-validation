@@ -1,19 +1,21 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 import core.basesyntax.model.UserRegisterException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class RegistrationServiceImplTest {
 
+    public static final User USER = new User();
     private static RegistrationService registration;
     private static StorageDaoImpl dao;
-    public static final User USER = new User();
+
     static {
         USER.setLogin("Vasya12345");
         USER.setPassword("Vasya$#145");
@@ -21,10 +23,9 @@ class RegistrationServiceImplTest {
     }
 
     @BeforeAll
-    public static void init(){
+    public static void init() {
         registration = new RegistrationServiceImpl();
         dao = new StorageDaoImpl();
-
     }
 
     @Test
@@ -48,11 +49,13 @@ class RegistrationServiceImplTest {
         assertThrows(UserRegisterException.class,
                 () -> registration.register(null));
     }
+
     @Test
     void register_EmptyUser_Fail() {
         assertThrows(UserRegisterException.class,
                 () -> registration.register(new User()));
     }
+
     @Test
     void register_ShortNameUser_Fail() {
         User shortNameUser = new User();
@@ -77,7 +80,6 @@ class RegistrationServiceImplTest {
         assertEquals(login6, saved);
     }
 
-
     @Test
     void register_ShortPasswordUser_Fail() {
         User login = new User();
@@ -95,7 +97,6 @@ class RegistrationServiceImplTest {
         login.setLogin("Vasya8");
         login.setPassword("Vasya79879");
         login.setAge(17);
-//        registration.register(login);
         assertThrows(UserRegisterException.class,
                 () -> registration.register(login));
     }
