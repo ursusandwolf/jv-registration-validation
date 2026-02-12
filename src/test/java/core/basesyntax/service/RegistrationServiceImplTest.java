@@ -91,6 +91,12 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_NotAdultUser_Fail() {
-
+        User login = new User();
+        login.setLogin("Vasya8");
+        login.setPassword("Vasya79879");
+        login.setAge(17);
+//        registration.register(login);
+        assertThrows(UserRegisterException.class,
+                () -> registration.register(login));
     }
 }
