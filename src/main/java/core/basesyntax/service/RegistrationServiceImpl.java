@@ -7,6 +7,7 @@ import core.basesyntax.model.UserRegisterException;
 
 public class RegistrationServiceImpl implements RegistrationService {
     public static final int MIN_LENGTH = 6;
+    public static final int ADULT_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -35,11 +36,11 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkAge(Integer age) {
-        if (age == null || age < 18) {
-            throw new UserRegisterException("Age is less than 18");
+        if (age == null) {
+            throw new UserRegisterException("Age is null");
         }
-        if (age > 200) {
-            throw new UserRegisterException("Age is more than 200");
+        if (age < ADULT_AGE) {
+            throw new UserRegisterException("Age is less than " + ADULT_AGE);
         }
     }
 
