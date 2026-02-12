@@ -35,7 +35,10 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NullUser_Fail() {}
+    void register_NullUser_Fail() {
+        assertThrows(NullPointerException.class,
+                () -> registration.register(null));
+    }
     @Test
     void register_EmptyUser_Fail() {}
     @Test
